@@ -17,7 +17,7 @@
   <script type="text/babel">
     const { useState } = React;
 
-    const Slideshow = ({ slides }) => {
+    const Slideshow = ({ slides, totalBeds }) => {
       const [currentIndex, setCurrentIndex] = useState(0);
 
       const handlePrev = () => {
@@ -35,21 +35,17 @@
             Séjour cuisine avec petite chambre donnant sur le jardin, salle de bain, grande chambre à l'étage
           </h2>
 
+          {/* Diaporama */}
           <div className="relative w-full max-w-3xl shadow-2xl rounded-2xl overflow-hidden">
             <img
               src={slides[currentIndex].image}
               alt={`Slide ${currentIndex + 1}`}
               className="w-full h-[500px] object-cover"
             />
-            {/* Texte sur image */}
-            <div className="absolute bottom-20 left-4 bg-black bg-opacity-60 text-white px-3 py-1 rounded">
+            <div className="absolute bottom-4 left-4 bg-black bg-opacity-60 text-white px-3 py-1 rounded">
               {slides[currentIndex].comment}
             </div>
-            {/* Pictogrammes de couchages */}
-            <div className="absolute bottom-4 left-4 flex space-x-1 text-white text-2xl">
-              {'🛏️'.repeat(slides[currentIndex].beds)}
-            </div>
-            {/* Flèches de navigation */}
+
             <button
               onClick={handlePrev}
               className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-black bg-opacity-40 text-white text-3xl px-3 py-1 rounded-full hover:bg-opacity-60"
@@ -74,21 +70,29 @@
               </span>
             ))}
           </div>
+
+          {/* Pictogrammes couchages + texte */}
+          <div className="mt-4 text-xl text-gray-800 flex items-center space-x-2">
+            <span>{'🛏️'.repeat(totalBeds)}</span>
+            <span>{totalBeds} couchage{totalBeds > 1 ? 's' : ''}</span>
+          </div>
         </div>
       );
     };
 
-    // Slides avec pictogrammes de couchages
+    // Slides
     const maisonSlides = [
-      { image: 'images/Maison4-079.jpg', comment: 'Séjour cuisine', beds: 0 },
-      { image: 'images/Maison3-061.jpg', comment: 'Chambre du haut', beds: 2 },
-      { image: 'images/Maison3-063.jpg', comment: 'Chambre du haut', beds: 2 },
-      { image: 'images/Maison3-064.jpg', comment: 'Chambre du haut', beds: 2 },
-      { image: 'images/Maison3-067.jpg', comment: 'Salle de bain', beds: 0 },
-      { image: 'images/Maison3-068.jpg', comment: 'Petite chambre', beds: 1 }
+      { image: 'images/Maison4-079.jpg', comment: 'Séjour cuisine' },
+      { image: 'images/Maison3-061.jpg', comment: 'Chambre du haut' },
+      { image: 'images/Maison3-063.jpg', comment: 'Chambre du haut' },
+      { image: 'images/Maison3-064.jpg', comment: 'Chambre du haut' },
+      { image: 'images/Maison3-067.jpg', comment: 'Salle de bain' },
+      { image: 'images/Maison3-068.jpg', comment: 'Petite chambre' }
     ];
 
-    ReactDOM.createRoot(document.getElementById('root')).render(<Slideshow slides={maisonSlides} />);
+    const totalBeds = 5; // Remplace par le nombre exact de couchages
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<Slideshow slides={maisonSlides} totalBeds={totalBeds} />);
   </script>
 </body>
 </html>
