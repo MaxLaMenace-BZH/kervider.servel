@@ -5,16 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Diaporama</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <!-- Inclusion de React et Babel pour permettre l'utilisation de JSX -->
   <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
 </head>
 <body class="bg-gray-100">
-  <!-- Musique de fond optionnelle en style breton -->
   <audio src="musique_bretonne.mp3" autoplay loop></audio>
 
-  <div id="root" class="min-h-screen flex items-center justify-center"></div>
+  <div id="root" class="min-h-screen flex items-center justify-center p-4"></div>
 
   <script type="text/babel">
     const { useState } = React;
@@ -31,58 +29,63 @@
       };
 
       return (
-        <div className="relative flex flex-col items-center justify-center space-y-2 p-4">
-          <h1 className="text-3xl font-bold text-gray-800 mb-1">Maison du MILIEU</h1>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">
+        <div className="relative flex flex-col items-center justify-center space-y-4 w-full">
+          <h1 className="text-3xl font-bold text-gray-800">Maison du MILIEU</h1>
+          <h2 className="text-xl font-semibold text-gray-600 text-center">
             Séjour cuisine avec petite chambre donnant sur le jardin, salle de bain, grande chambre à l'étage
           </h2>
 
-          <div className="relative w-full max-w-3xl shadow-xl rounded-2xl overflow-hidden">
+          <div className="relative w-full max-w-3xl shadow-2xl rounded-2xl overflow-hidden">
             <img
               src={slides[currentIndex].image}
               alt={`Slide ${currentIndex + 1}`}
               className="w-full h-[500px] object-cover"
             />
-            <div className="absolute bottom-4 left-4 bg-black bg-opacity-50 text-white p-2 rounded">
+            {/* Texte sur image */}
+            <div className="absolute bottom-20 left-4 bg-black bg-opacity-60 text-white px-3 py-1 rounded">
               {slides[currentIndex].comment}
             </div>
+            {/* Pictogrammes de couchages */}
+            <div className="absolute bottom-4 left-4 flex space-x-1 text-white text-2xl">
+              {'🛏️'.repeat(slides[currentIndex].beds)}
+            </div>
+            {/* Flèches de navigation */}
+            <button
+              onClick={handlePrev}
+              className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-black bg-opacity-40 text-white text-3xl px-3 py-1 rounded-full hover:bg-opacity-60"
+              aria-label="Précédent"
+            >
+              ‹
+            </button>
+            <button
+              onClick={handleNext}
+              className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-black bg-opacity-40 text-white text-3xl px-3 py-1 rounded-full hover:bg-opacity-60"
+              aria-label="Suivant"
+            >
+              ›
+            </button>
           </div>
 
-          {/* Indicateurs de position */}
-          <div className="flex space-x-2 mt-2">
+          {/* Indicateurs */}
+          <div className="flex space-x-1 mt-2">
             {slides.map((_, index) => (
               <span key={index} className={`text-2xl ${index === currentIndex ? 'text-blue-600' : 'text-gray-400'}`}>
                 {index === currentIndex ? '●' : '○'}
               </span>
             ))}
           </div>
-
-          {/* Boutons de navigation */}
-          <div className="relative w-full max-w-3xl mt-4 flex justify-between">
-            <button
-              onClick={handlePrev}
-              className="bg-white p-4 rounded-full shadow-md -ml-12"
-            >
-              &lt;
-            </button>
-            <button
-              onClick={handleNext}
-              className="bg-white p-4 rounded-full shadow-md -mr-12"
-            >
-              &gt;
-            </button>
-          </div>
         </div>
       );
     };
 
+    // Slides avec pictogrammes de couchages
     const maisonSlides = [
-      { image: 'images/Maison4-079.jpg', comment: 'Séjour cuisine' },
-      { image: 'images/Maison3-061.jpg', comment: 'Chambre du haut' },
-      { image: 'images/Maison3-063.jpg', comment: 'Chambre du haut' },
-      { image: 'images/Maison3-064.jpg', comment: 'Chambre du haut' },
-      { image: 'images/Maison3-067.jpg', comment: 'Salle de bain' },
-      { image: 'images/Maison3-068.jpg', comment: 'Petite chambre' }
+      { image: 'images/Maison4-079.jpg', comment: 'Séjour cuisine', beds: 0 },
+      { image: 'images/Maison3-061.jpg', comment: 'Chambre du haut', beds: 2 },
+      { image: 'images/Maison3-063.jpg', comment: 'Chambre du haut', beds: 2 },
+      { image: 'images/Maison3-064.jpg', comment: 'Chambre du haut', beds: 2 },
+      { image: 'images/Maison3-067.jpg', comment: 'Salle de bain', beds: 0 },
+      { image: 'images/Maison3-068.jpg', comment: 'Petite chambre', beds: 1 }
     ];
 
     ReactDOM.createRoot(document.getElementById('root')).render(<Slideshow slides={maisonSlides} />);
