@@ -1,71 +1,38 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Diaporama</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <!-- Inclusion de React et Babel pour permettre l'utilisation de JSX -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Maison - Nom à personnaliser</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
   <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
 </head>
 <body class="bg-gray-100">
-  <!-- Musique de fond optionnelle en style breton -->
   <audio src="musique_bretonne.mp3" autoplay loop></audio>
 
-  <div id="root" class="min-h-screen flex items-center justify-center"></div>
+  <div id="root" class="min-h-screen flex flex-col items-center justify-center space-y-6 p-4"></div>
 
   <script type="text/babel">
-    const { useState, useEffect } = React;
+    const { useState } = React;
 
-    // Composant pour le compte à rebours
-    const Countdown = ({ duration, keyReset }) => {
-      const [timeLeft, setTimeLeft] = useState(duration);
-
-      useEffect(() => {
-        setTimeLeft(duration);
-        const timer = setInterval(() => {
-          setTimeLeft(prev => (prev > 0 ? prev - 1 : 0));
-        }, 1000);
-        return () => clearInterval(timer);
-      }, [duration, keyReset]);
-
-      return (
-        <div className="text-center text-lg text-gray-700 mb-2">
-          Photo suivante dans : {timeLeft} seconde{timeLeft > 1 ? 's' : ''}
-        </div>
-      );
-    };
-
-    const Slideshow = ({ slides }) => {
+    const Slideshow = ({ slides, titre, sousTitre, equipements }) => {
       const [currentIndex, setCurrentIndex] = useState(0);
-      const [resetKey, setResetKey] = useState(0);
-      const duration = 7;
-
-      useEffect(() => {
-        const interval = setInterval(() => {
-          setCurrentIndex(prevIndex => (prevIndex + 1) % slides.length);
-          setResetKey(prev => prev + 1);
-        }, duration * 1000);
-
-        return () => clearInterval(interval);
-      }, [slides.length]);
 
       const handlePrev = () => {
         setCurrentIndex((currentIndex - 1 + slides.length) % slides.length);
-        setResetKey(prev => prev + 1);
       };
 
       const handleNext = () => {
         setCurrentIndex((currentIndex + 1) % slides.length);
-        setResetKey(prev => prev + 1);
       };
 
       return (
-        <div className="relative flex flex-col items-center justify-center space-y-2">
-          <h1 className="text-3xl font-bold text-gray-800 mb-1">Maison independante avec petit jardin</h1>
-          <Countdown duration={duration} keyReset={resetKey} />
+        <div className="flex flex-col items-center space-y-4">
+          <h1 className="text-3xl font-bold text-gray-800">{titre}</h1>
+          <h2 className="text-xl text-gray-700">{sousTitre}</h2>
+
           <div className="relative w-full max-w-3xl shadow-xl rounded-2xl overflow-hidden">
             <img
               src={slides[currentIndex].image}
@@ -76,26 +43,26 @@
               {slides[currentIndex].comment}
             </div>
           </div>
-          <div className="relative w-full max-w-3xl mt-4 flex justify-between">
-            <button
-              onClick={handlePrev}
-              className="bg-white p-4 rounded-full shadow-md -ml-12"
-            >
-              &lt;
+
+          <div className="flex space-x-8 mt-2">
+            <button onClick={handlePrev} className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg shadow-md">
+              ◀ Précédent
             </button>
-            <button
-              onClick={handleNext}
-              className="bg-white p-4 rounded-full shadow-md -mr-12"
-            >
-              &gt;
+            <button onClick={handleNext} className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg shadow-md">
+              Suivant ▶
             </button>
+          </div>
+
+          <div className="w-full max-w-3xl mt-8 grid grid-cols-3 sm:grid-cols-4 gap-4 text-center text-gray-800">
+            {equipements.map((item, index) => (
+              <div key={index}>{item}</div>
+            ))}
           </div>
         </div>
       );
     };
 
-    // Tableau des slides
-    const maisonSlides = [
+    const slidesMaison = [
       { image: 'images/Image-01.jpg', comment: 'Maison' },
       { image: 'images/Image-02.jpg', comment: 'Porte d"entrée' },
       { image: 'images/Image-03.jpg', comment: 'Cuisine' },
@@ -104,9 +71,31 @@
       { image: 'images/Image-06.jpg', comment: 'Escalier' },
       { image: 'images/Image-07.jpg', comment: 'Bureau' },
       { image: 'images/Image-08.jpg', comment: 'Chambre à létage' }
+      // Ajoute ou supprime des images selon les besoins
     ];
 
-    ReactDOM.createRoot(document.getElementById('root')).render(<Slideshow slides={maisonSlides} />);
+    const equipementsMaison = [
+      '🛏️ 4 couchages',
+      '🧺 Couvertures',
+      '🍳 Cuisinière',
+      '☕ Cafetière',
+	  '🔌 Bouilloire',
+      '🧊 Frigo-congélateur',
+      '🎛️ Micro-ondes',
+      '🚿 Douche',
+      '🐾 Animaux acceptés'
+     
+      // Tu peux retirer/ajouter selon la maison
+    ];
+
+    ReactDOM.createRoot(document.getElementById('root')).render(
+      <Slideshow
+        slides={slidesMaison}
+        titre="Maison independante avec petit jardin"
+        sousTitre="Séjour cuisine, salle de bain, grande chambre à l'étage"
+        equipements={equipementsMaison}
+      />
+    );
   </script>
 </body>
 </html>
